@@ -1,0 +1,18 @@
+server:
+  port: 10000
+           
+security:
+  oauth2:
+    resource:
+      user-info-uri: http://localhost:1000/auth-server/oauth/user
+    client:
+      client-id: storybox
+      client-secret: storybox-super-secure
+      
+spring:
+  application:
+    name: storybox-service
+    
+  security:
+    user:
+      name: test
