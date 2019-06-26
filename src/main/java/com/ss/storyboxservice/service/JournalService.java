@@ -23,7 +23,12 @@ interface JournalREST {
 	Resource<Journal> post(Journal journal, @RequestHeader("Authorization") String token);
 	
     @GetMapping("/search/findByUsername?sort=date,desc")
-    Resources<Journal> get(@RequestHeader("Authorization") String token, @RequestParam("username") String username);
+    Resources<Journal> findByUsername(@RequestHeader("Authorization") String token, @RequestParam("username") String username);
+
+    @GetMapping("/search/findByUsernameAndTextContaining?sort=date,desc")
+    Resources<Journal> findByUsernameAndTextContaining(@RequestHeader("Authorization") String token,
+    		@RequestParam("username") String username,
+    		@RequestParam("text") String text);
 
 }
 
@@ -42,11 +47,17 @@ public class JournalService {
 		return jt;
 	}
 	
-	public Collection<Journal> get(Principal principal, String token) {
-		Resources<Journal> resources = journalREST.get(token, principal.getName());
+	public Collection<Journal> findByUsername(Principal principal, String token) {
+		Resources<Journal> resources = journalREST.findByUsername(token, principal.getName());
 
 		return resources.getContent();
 	}
 	
+	public Collection<Journal> findByUsernameAndTextContaining(Principal principal, String token, String text) {
+		Resources<Journal> resources = journalREST.findByUsernameAndTextContaining(token,
+				principal.getName(), text);
+
+		return resources.getContent();
+	} 
 
 }

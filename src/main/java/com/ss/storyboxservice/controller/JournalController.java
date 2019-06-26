@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ss.storyboxservice.model.Journal;
@@ -31,10 +32,15 @@ public class JournalController {
 		return new ResponseEntity<>(journalService.post(principal, journal, token), HttpStatus.CREATED);
 	}
 	@GetMapping()
-	public ResponseEntity<Collection<Journal>> postJournal(Authentication principal,
+	public ResponseEntity<Collection<Journal>> getJournal(Authentication principal,
 			@RequestHeader("Authorization") String token) {
-		System.out.println(principal.getName());
-		return new ResponseEntity<>(journalService.get(principal, token), HttpStatus.OK);
+		return new ResponseEntity<>(journalService.findByUsername(principal, token), HttpStatus.OK);
+	}
+	@GetMapping("/search")
+	public ResponseEntity<Collection<Journal>> searchJournal(Authentication principal,
+			@RequestHeader("Authorization") String token,
+			@RequestParam("text") String text) {
+		return new ResponseEntity<>(journalService.findByUsernameAndTextContaining(principal, token, text), HttpStatus.OK);
 	}
 
 }
